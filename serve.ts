@@ -1,14 +1,15 @@
-import { Application, Status, Router} from "https://deno.land/x/oak/mod.ts";
+import { Application, Router} from "https://deno.land/x/oak/mod.ts";
+import {testApiHandler} from "./controller/userController.ts";
+
+
 
 const app = new Application();
 
 const router = new Router();
 
 router
-    .get('/api/test', (context) => {
-        context.response.status = Status.OK;
-        context.response.body = "Hello world";
-    })
+    .get('/api/test', testApiHandler)
+
 
 app.use(router.routes());
 app.use(router.allowedMethods());
