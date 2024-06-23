@@ -1,11 +1,16 @@
-const port = 3000;
+import { Application, Status, Router} from "https://deno.land/x/oak/mod.ts";
 
-const handler = (request: Request): Response =>{
-    const body = JSON.stringify({
-        user: "chungnd1",
-        pass: "password1"
-    });
-    return new Response(body,{status: 200})
-};
+const app = new Application();
 
-Deno.serve({port},handler);
+const router = new Router();
+
+router
+    .get('/api/test', (context) => {
+        context.response.status = Status.OK;
+        context.response.body = "Hello world";
+    })
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+await app.listen({ port: 8000 });
