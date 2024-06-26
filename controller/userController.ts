@@ -1,6 +1,15 @@
 import { Context, Status } from "https://deno.land/x/oak/mod.ts";
+import Db from "../db/database.ts"
 
-export const testApiHandler = (context: Context) => {
+const testCollection = Db.collection("users")
+
+export const testApiHandler = async (context: Context) => {
+  const insertId = await testCollection.insertOne({
+    username: "chungnd",
+    password: "MyPassword01"
+  });
+
+  console.log(insertId)
   context.response.status = Status.OK;
   context.response.body = "Hello world";
 };
