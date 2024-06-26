@@ -3,6 +3,7 @@ import Db from "../db/database.ts"
 
 const testCollection = Db.collection("users")
 
+console.log("vao den day")
 export const testApiHandler = async (context: Context) => {
   const insertId = await testCollection.insertOne({
     username: "chungnd",
