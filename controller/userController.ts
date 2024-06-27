@@ -1,16 +1,31 @@
-import { Context, Status } from "https://deno.land/x/oak/mod.ts";
-import Db from "../db/database.ts"
+import { Context , Status} from "https://deno.land/x/oak/mod.ts";
+import {saveUser,selectUserByPhone} from "../repository/userRepo.ts";
+import {BaseResponse} from "../helper/baseResponse.ts";
 
-const testCollection = Db.collection("users")
 
-console.log("vao den day")
-export const testApiHandler = async (context: Context) => {
-  const insertId = await testCollection.insertOne({
-    username: "chungnd",
-    password: "MyPassword01"
-  });
+export const signInHandler = async (context: Context) => {
+    context.response.status = Status.Conflict;
+}
 
-  console.log(insertId)
-  context.response.status = Status.OK;
-  context.response.body = "Hello world";
-};
+export const signUpHandler = async (context: Context) => {
+
+    const reqData = await context.request.body.json();
+
+    const user = await selectUserByPhone(reqData.phone)
+    if(user){
+        return BaseResponse(context,Status.Conflict, {
+            status: Status.Conflict,
+            message: "Existed User!"
+        });
+    }else {
+        await saveUser(reqData)
+        return BaseResponse(context,Status.OK,{
+            status: Status.OK,
+            message: "Sign Up successful!",
+            id: reqData._id,
+            displayName: reqData.displayName,
+            avatar: reqData.avatar,
+            phone: reqData.phone
+        });
+    }
+}
